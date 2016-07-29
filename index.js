@@ -4,23 +4,25 @@
 var _=require('lodash');
 var exec = require('child_process').exec;
 var colors = require('colors');
-var ShellPromiseChain=function(config){
+
+var ShellPromise=function(config){
     this._config=Object.assign({
         cwd:'./',
         shortLog:99999999999,
+        transformLog:function(stdout){return stdout},
         maxBuffer:5 * 1024 * 1024
     },config);
     this._promise=Promise.resolve(config);
     this.callLog=[];
 };
-ShellPromiseChain.prototype.getConfig=function(keyPath){
+ShellPromise.prototype.getConfig=function(keyPath){
     return _.get(this._config,keyPath);
 };
-ShellPromiseChain.prototype.copy=function(conifg){
+ShellPromise.prototype.copy=function(conifg){
     config=Object.assign({},this._config,config);
-    return new ShellPromiseChain(config);
+    return new ShellPromise(config);
 };
-ShellPromiseChain.prototype.exec=function(cmd,execResolver,config){
+ShellPromise.prototype.exec=function(cmd,execResolver,config){
     config=Object.assign({},this._config,config);
     var This=this;
     this._promise=this._promise.then(function(result){
@@ -38,6 +40,9 @@ ShellPromiseChain.prototype.exec=function(cmd,execResolver,config){
             exec(cmd,config,
                 function(error,stdout){
                     var log=stdout.slice(0,config.shortLog);
+                    if(config.transformLog){
+                        log=config.transformLog(stdout);
+                    }
                     This.callLog.push(colors.red(error||'')+colors.green(log));
                     var args;
                     if(_.isFunction(execResolver)){
@@ -56,11 +61,11 @@ ShellPromiseChain.prototype.exec=function(cmd,execResolver,config){
     });
     return this;
 };
-ShellPromiseChain.prototype.addPromise=function(promise){
+ShellPromise.prototype.addPromise=function(promise){
     this._promise=this._promise.then(()=>promise);
     return this;
 };
-ShellPromiseChain.prototype.result=function(onFulfilled,onRejected){
+ShellPromise.prototype.result=function(onFulfilled,onRejected){
     var This=this;
     function callLog(){
         console.log(colors.yellow(This.callLog.join('\r\n')));
@@ -76,8 +81,8 @@ ShellPromiseChain.prototype.result=function(onFulfilled,onRejected){
     }
     return this._promise.then(onFulfilled||success,onRejected||error);
 };
-ShellPromiseChain.exec=function(cmd,config,execResolver){
-    var shell=new ShellPromiseChain(config);
+ShellPromise.exec=function(cmd,config,execResolver){
+    var shell=new ShellPromise(config);
     return shell.exec(cmd,execResolver,config);
 };
-module.exports=ShellPromiseChain;
+module.exports=ShellPromise;

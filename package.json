@@ -1,24 +1,22 @@
 {
-  "name": "zhen22app",
-  "appVersion": "v0.1",
-  "assetsVersion": 0,
-  "git":"",
-  "commit":"",
-  "changeLog": "",
-  "devDependencies": {
+  "name": "shell-promise-chain",
+  "version": "1.0.2",
+  "description": "node exec promise",
+  "main": "index.js",
+  "dependencies": {
     "lodash": "^4.12.0",
-    "bluebird": "^3.4.1",
-    "colors": "^1.1.2",
-    "copy": "^0.2.3",
-    "del": "^2.2.0",
-    "fs-extra": "^0.30.0",
-    "glob": "^7.0.5",
-    "gulp": "^3.9.1",
-    "gulp-line-ending-corrector": "^1.0.1",
-    "gulp-util": "^3.0.7",
-    "yargs": "^4.6.0"
+    "colors": "^1.1.2"
   },
   "scripts": {
-    "publish": "node node_modules/gulp/bin/gulp.js --gulpfile gulpfile.js publish"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulwe/ShellPromise.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kulwe/ShellPromise/issues"
+  },
+  "homepage": "https://github.com/kulwe/ShellPromise#readme"
 }
