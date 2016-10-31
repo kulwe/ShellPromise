@@ -41,7 +41,7 @@ ShellPromise.prototype.exec=function(cmd,execResolver,config){
                 function(error,stdout){
                     var log=stdout.slice(0,config.shortLog);
                     if(config.transformLog){
-                        log=config.transformLog(stdout);
+                        log=config.transformLog(log);
                     }
                     This.callLog.push(colors.red(error||'')+colors.green(log));
                     var args;
